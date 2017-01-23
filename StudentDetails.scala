@@ -73,6 +73,31 @@ output:
 Himanshu 75%
 Geetika 74%
     */
+def calculationForOverAll(marksList:List[Marks],studentList:List[Student]):List[(String,Float)]={
+    val tempPair1=marksList.groupBy(x=> x.studentId)                  //Key value pair having studentId as key & list of list of MarksCase as value
+    val tempList1=tempPair1.map(x=> (x._1,x._2.map(y=>y.marksObtained).sum)).toList // Creating a list having tuples of total marks with associated studentID
+    val result=for(x<-tempList1;y<-studentList if(x._1==y.id))yield (y.name,(x._2)/5) // combining the names and marks to get a new list of toppers
+    result
+  }
+
+/*
+Input:-
+(percentage, good_scholarship, normal_or_no_scholarship)
+Output:- two groups of students with the amount of scholarship
+e.g.
+input: 85% 2000 500
+output: 
+Kunal 2000
+Himanshu 500
+Geetika 2000
+Mahesh 500
+*/
+	
+	def scholarship(marksList:List[Marks],studentsList:List[Student],percent:Double,amount:List[Double]):List[(String,Double)]={
+    val tempList=calculationForOverAll(marksList,studentsList)
+    val result=tempList.map(x=> if(x._2 >= percent) (x._1,amount(0)) else (x._1,amount(1)))
+    result
+  }
 
      
      
@@ -98,6 +123,8 @@ object StudentDetails
      println(myobj.findPassFail(marksList,1,33,"pass"))
      
       println(myobj.findTopBottom(marksList,1,2,"top"))
+	   
+	println(myobj.scholarship(marksList,studentlist,80.0,List(2000.0,500.0)))
      // println(myobj.overAllTopBottom(marksList,studentslist,2, "Top").map(x=> println(s"${x._1} : ${x._2}%")))
      
     }
