@@ -1,0 +1,53 @@
+
+case class Student(id: Long, name: String) 
+case class Marks(subjectId: Int,studentId: Long, marksObtained: Float) 
+
+class AllModules
+{
+  def findPassFail(markslst: List[Marks],id: Int, percent: Float,choice: String): Int =
+     {
+         choice match {
+             case "pass" => {
+             val count= markslst.flatMap(x => if(x.subjectId == id && x.marksObtained > percent) Some(x) else None )
+                 count.length
+               }
+               case "fail" => {
+                   val count=markslst.flatMap(x => if(x.subjectId == id && x.marksObtained < percent) Some(x) else None)
+               
+                   count.length
+               }
+               
+         }
+     }
+     
+     def findTopBottom(mrksList: List[Marks],id: Int,count:Int,choice: String): List[Float] =
+{
+    choice match {
+        
+     case "top" => { 
+         val toppers=mrksList.flatMap(x => if(x.subjectId == id) Some(x.marksObtained) else None)
+         toppers.sorted.drop(toppers.length-count).reverse
+         
+     } 
+     case "bottom" => {
+         val bottoms=mrksList.flatMap(x => if(x.subjectId == id) Some(x.marksObtained) else None)
+         bottoms.sorted.reverse.drop(bottoms.length-count).reverse
+     }
+    }
+}
+     
+     
+     
+}
+
+object StudentDetails {
+    def main(args: Array[String]) {
+    val myobj=new AllModules
+    val studentlist: List[Student] = List(Student(1, "Kunal"), Student(2, "Himanshu"))
+    val marksList: List[Marks]=List(Marks(1, 1, 95), Marks(1, 2, 15), Marks(1, 3, 25), Marks(1, 4, 75))
+     println(myobj.findPassFail(marksList,1,33,"pass"))
+     
+      println(myobj.findTopBottom(marksList,1,2,"top"))
+     
+    }
+}
